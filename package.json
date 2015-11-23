@@ -57,21 +57,5 @@
       "email": "forsigner@gmail.com"
     }
   ],
-  "directories": {},
-  "gitHead": "54ea95b0272679c087231a6266171c2a7d3fb4e1",
-  "_id": "mocer@1.2.0",
-  "_shasum": "aac2555ccf4897d9be66b2a8cbe2d14ff9801a67",
-  "_from": "mocer@>=1.1.1 <2.0.0",
-  "_npmVersion": "2.11.2",
-  "_nodeVersion": "0.12.6",
-  "dist": {
-    "shasum": "aac2555ccf4897d9be66b2a8cbe2d14ff9801a67",
-    "size": 4175,
-    "noattachment": false,
-    "tarball": "http://registry.npm.taobao.org/mocer/download/mocer-1.2.0.tgz"
-  },
-  "publish_time": 1446974580503,
-  "_cnpm_publish_time": 1446974580503,
-  "_resolved": "https://registry.npm.taobao.org/mocer/download/mocer-1.2.0.tgz",
-  "readme": "ERROR: No README data found!"
+  "directories": {}
 }
