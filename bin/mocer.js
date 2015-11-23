@@ -41,8 +41,8 @@ function getBaseDir(baseDir) {
 }
 
 function openBrowser(port) {
-  var externalUrl = 'http://' + devip()[0] + ':' + port + '/mock-api'
-  var localUrl = 'http://localhost:' + port + '/mock-api'
+  var externalUrl = 'http://' + devip()[0] + ':' + port + '/_apis'
+  var localUrl = 'http://localhost:' + port + '/_apis'
   console.log('Access URLs');
   console.log('--------------------------------------');
   console.log('   Local:  ' + externalUrl.green);
