@@ -46,7 +46,7 @@ function mock(root, options) {
   };
 }
 
-///////////////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////////////
 
 /**
  * get mock json path
@@ -62,7 +62,9 @@ function getMockFilePath(mockPath, req, callback) {
   var mockFilePath = path.join(mockPath, mockUrlPath + '.' + req.method + '.md');
 
   fs.exists(mockFilePath, function(exists) {
-    if (exists) return callback(mockFilePath);
+    if (exists) {
+      return callback(mockFilePath);
+    }
     return callback(false);
   });
 }
@@ -97,11 +99,7 @@ function createAllJson(mockPath) {
       var index = mockPath.lastIndexOf('/');
       var splitStr = mockPath.substring(index);
       var arr = item.split(splitStr)[1].split('.');
-      var item = {
-        url: arr[0],
-        method: arr[1],
-        res: res
-      }
+      var item = {url: arr[0], method: arr[1], res: res};
       data.push(item);
     }
   });
@@ -176,18 +174,18 @@ function renderApis(req, res, next, mockPath) {
 
     try {
       resStr = resStr.replace(/```js|``` js|```javascript|``` javascript|```/gi, '');
-      resStr = strip(resStr).replace(/ /, '');;
+      resStr = strip(resStr);
 
-      if (resStr.length) {
-        resStr= eval("(" + resStr + ")");
+      if (resStr.search(/\{|\[/) > -1) {
+        resStr = eval('(' + resStr + ')');
         resStr = resStr ? JSON.stringify(resStr) : null;
       } else {
         resStr = null;
       }
-      
+
     } catch (e) {
-      console.log(colors.red('something wrong in file: ' + mockFilePath))
-      console.log(colors.red(e))
+      console.log(colors.red('something wrong in file: ' + mockFilePath));
+      console.log(colors.red(e));
     }
 
     res.statusCode = status;
