@@ -1,0 +1,77 @@
+{
+  "name": "mocer",
+  "description": "A middleware for Node.js (browser-sync, express, connect) to generate mock data.",
+  "version": "1.0.0",
+  "author": {
+    "name": "forsigner",
+    "email": "forsigner@gmail.com"
+  },
+  "main": "index.js",
+  "bin": {
+    "mocer": "./bin/mocer.js"
+  },
+  "license": "MIT",
+  "keywords": [
+    "browser-sync",
+    "express",
+    "connect",
+    "mock",
+    "mocer",
+    "middleware"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/forsigner/mocer.git"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "connect": "^3.4.0",
+    "dev-ip": "^1.0.1",
+    "fs-jetpack": "^0.7.0",
+    "opn": "^3.0.2",
+    "strip-comments": "^0.4.1"
+  },
+  "devDependencies": {},
+  "files": [
+    "LICENSE",
+    "index.js",
+    "template.html",
+    "bin/mocer.js"
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {},
+  "bugs": {
+    "url": "https://github.com/forsigner/mocer/issues"
+  },
+  "homepage": "https://github.com/forsigner/mocer",
+  "_npmUser": {
+    "name": "forsigner",
+    "email": "forsigner@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "forsigner",
+      "email": "forsigner@gmail.com"
+    }
+  ],
+  "directories": {},
+  "gitHead": "54ea95b0272679c087231a6266171c2a7d3fb4e1",
+  "_id": "mocer@1.2.0",
+  "_shasum": "aac2555ccf4897d9be66b2a8cbe2d14ff9801a67",
+  "_from": "mocer@>=1.1.1 <2.0.0",
+  "_npmVersion": "2.11.2",
+  "_nodeVersion": "0.12.6",
+  "dist": {
+    "shasum": "aac2555ccf4897d9be66b2a8cbe2d14ff9801a67",
+    "size": 4175,
+    "noattachment": false,
+    "tarball": "http://registry.npm.taobao.org/mocer/download/mocer-1.2.0.tgz"
+  },
+  "publish_time": 1446974580503,
+  "_cnpm_publish_time": 1446974580503,
+  "_resolved": "https://registry.npm.taobao.org/mocer/download/mocer-1.2.0.tgz",
+  "readme": "ERROR: No README data found!"
+}
