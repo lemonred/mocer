@@ -94,7 +94,9 @@ function createAllJson(mockPath) {
   paths.forEach(function(item) {
     if (item.indexOf('_apis') < 0) {
       var res = jetpack.read(item);
-      var arr = item.split('mocks')[1].split('.');
+      var index = mockPath.lastIndexOf('/');
+      var splitStr = mockPath.substring(index);
+      var arr = item.split(splitStr)[1].split('.');
       var item = {
         url: arr[0],
         method: arr[1],
