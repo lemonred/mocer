@@ -176,9 +176,15 @@ function renderApis(req, res, next, mockPath) {
 
     try {
       resStr = resStr.replace(/```js|``` js|```javascript|``` javascript|```/gi, '');
-      resStr = strip(resStr);
-      resStr= eval("(" + resStr + ")");
-      resStr = resStr ? JSON.stringify(resStr) : null;
+      resStr = strip(resStr).replace(/ /, '');;
+
+      if (resStr.length) {
+        resStr= eval("(" + resStr + ")");
+        resStr = resStr ? JSON.stringify(resStr) : null;
+      } else {
+        resStr = null;
+      }
+      
     } catch (e) {
       console.log(colors.red('something wrong in file: ' + mockFilePath))
       console.log(colors.red(e))
