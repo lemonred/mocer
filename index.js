@@ -118,7 +118,6 @@ function createAllJson(mockPath) {
  */
 function renderTemplate(req, res, next, mockPath) {
   var templatePath = path.join(mockPath, '_apis', 'index.html');
-  console.log(templatePath);
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html;charset=utf-8');
   res.end(fs.readFileSync(templatePath, 'utf8'));
