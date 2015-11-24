@@ -29,6 +29,20 @@
       color: #999;
       font-size: 12px;
     }
+    .url {
+      color: #d14;
+    }
+    h1 {
+      font-size: 26px;
+    }
+
+    h2 {
+      font-size: 22px;
+    }
+
+    h3 {
+      font-size: 18px;
+    }
   </style>
 </head>
 
@@ -50,7 +64,7 @@
 
       </div>
       <div class="col-md-7" style="padding-top: 20px;">
-        <h4 id="title">Details</h4>
+        <h4 id="title">Details for : <span class="url" id="url">{{api.url}}</span></h4>
         <div class="code" id="code">
         </div>
       </div>
@@ -88,6 +102,7 @@
             path = path || '/0';
             var index = Number(path.replace(/\//, ''));
             $('#code').html(vm.apis[index].res)
+            $('#url').html( vm.apis[index].method + '   ' + vm.apis[index].url)
             highlight();
           });
 
