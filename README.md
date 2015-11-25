@@ -26,12 +26,12 @@ my-project
 ├── mocks
 │   ├── users
 │   │   ├── 1.GET.md
-│   │   ├── 1.GET.response.401.js
+│   │   ├── 1.GET.js
 │   │   └── 2.GET.md
 │   ├── users.GET.md
-│   ├── users.POST.request.js
+│   ├── users.POST.js
 │   ├── users.POST.md
-│   ├── users.POST.response.422.js
+│   ├── users.POST.js
 │   └── users.PUT.md
 └── package.js
 ```
