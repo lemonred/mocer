@@ -18,7 +18,7 @@ $ npm install -g mocer
 ```
 
 #### Step 2 : create mock file
-After create a server, you can add some js file to mocks dir, for example:
+After create a server, you can add some md file to mocks dir, for example:
 
 ```bash
 my-project
@@ -26,14 +26,12 @@ my-project
 ├── mocks
 │   ├── users
 │   │   ├── 1.GET.md
-│   │   ├── 1.GET.js
-│   │   └── 2.GET.md
+│   │   ├── 2.GET.md
+│   │   └── 3.GET.md
 │   ├── users.GET.md
-│   ├── users.POST.js
 │   ├── users.POST.md
-│   ├── users.POST.js
 │   └── users.PUT.md
-└── package.js
+└── package.json
 ```
 
 #### Step 3 : start mock server
@@ -91,7 +89,7 @@ app.listen(3000);
 ```
 
 #### Step 2 : create mock js file
-After create a server, you can add some js file to mocks dir, for example:
+After create a server, you can add some md file to mocks dir, for example:
 
 ```bash
 my-project
@@ -103,7 +101,7 @@ my-project
 │   ├── users.GET.md
 │   ├── users.POST.md
 │   └── users.PUT.md
-└── package.js
+└── package.json
 ```
 
 #### Step 3 : enjoy it
@@ -111,7 +109,7 @@ After start your server, you can use it.
 
 **For example 1 :**
 
-`curl -i http://localhost:9999/users?_status=200` will get response:
+`curl -i http://localhost:12306/users?_status=200` will get response:
 
 ```bash
 HTTP/1.1 200 OK
@@ -131,11 +129,11 @@ Transfer-Encoding: chunked
 }]
 ```
 
-`_status=200` mean that you get a response with http status code 200. By default, `_status` equal to `200`. so, `curl http://localhost:9999/users` will get a collect response too.
+`_status=200` mean that you get a response with http status code 200. By default, `_status` equal to `200`. so, `curl http://localhost:12306/users` will get a collect response too.
 
 **For example 2 :**
 
-`curl -X POST http://localhost:9999/users?_status=422` will get response:
+`curl -X POST http://localhost:12306/users?_status=422` will get response:
 
 ```bash
 
