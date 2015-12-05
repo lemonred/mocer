@@ -28,8 +28,6 @@ module.exports = mock;
  */
 
 function mock(root, options) {
-  var opts = options || {};
-
   createTemplate(root);
   createAllJson(root);
 
@@ -58,7 +56,6 @@ function mock(root, options) {
  */
 function getMockFilePath(mockPath, req, callback) {
   var mockUrlPath = url.parse(req.url).pathname;
-  var query = url.parse(req.url).query;
   var mockFilePath = path.join(mockPath, mockUrlPath + '.' + req.method + '.md');
 
   fs.exists(mockFilePath, function(exists) {
