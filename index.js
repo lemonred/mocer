@@ -97,7 +97,7 @@ function createAllJson(mockPath) {
   paths.forEach(function(item) {
     if (item.indexOf('_apis') < 0) {
       var res = jetpack.read(item);
-      var index = mockPath.lastIndexOf('/');
+      var index = mockPath.lastIndexOf(path.sep);
       var splitStr = mockPath.substring(index);
       var arr = item.split(splitStr)[1].split('.');
       var item = {url: arr[0], method: arr[1], res: res};
@@ -135,7 +135,7 @@ function renderTemplate(req, res, next, mockPath) {
  * @return {null}
  */
 function renderAllJson(req, res, next, mockPath) {
-  var data = jetpack.read(path.join(mockPath, '/_apis/all.json'), 'json');
+  var data = jetpack.read(path.join(mockPath, 'apis', 'all.json'), 'json');
   data = JSON.stringify(data);
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json;charset=utf-8');
