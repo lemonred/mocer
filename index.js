@@ -28,6 +28,8 @@ module.exports = mock;
  */
 
 function mock(root, options) {
+  var opts = options || {};
+
   createTemplate(root);
   createAllJson(root);
 
@@ -56,12 +58,14 @@ function mock(root, options) {
  */
 function getMockFilePath(mockPath, req, callback) {
   var mockUrlPath = url.parse(req.url).pathname;
+  var query = url.parse(req.url).query;
   var mockFilePath = path.join(mockPath, mockUrlPath + '.' + req.method + '.md');
 
   fs.exists(mockFilePath, function(exists) {
     if (exists) {
       return callback(mockFilePath);
     }
+
     return callback(false);
   });
 }
@@ -118,7 +122,7 @@ function renderTemplate(req, res, next, mockPath) {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/html;charset=utf-8');
   res.end(fs.readFileSync(templatePath, 'utf8'));
-  next();
+  return;
 }
 
 /**
@@ -136,10 +140,8 @@ function renderAllJson(req, res, next, mockPath) {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json;charset=utf-8');
   res.end(data);
-  next();
+  return;
 }
-
-
 
 function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
@@ -193,7 +195,8 @@ function renderApis(req, res, next, mockPath) {
     } else {
       res.end();
     }
-    next();
+
+    return;
 
   });
 }
