@@ -1,4 +1,4 @@
-# mocer
+# mocer [![Build Status](https://travis-ci.org/forsigner/mocer.svg?branch=master)](https://travis-ci.org/forsigner/mocer)
 Setup a mock server easily.
 
 Why use this module?
