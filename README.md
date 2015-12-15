@@ -88,7 +88,7 @@ app.use(mocer(__dirname + '/mocks'));
 app.listen(3000);
 ```
 
-#### Step 2 : create mock js file
+#### Step 2 : create mock md file
 After create a server, you can add some md file to mocks dir, for example:
 
 ```bash
