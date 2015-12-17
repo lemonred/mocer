@@ -135,7 +135,7 @@ function renderTemplate(req, res, next, mockPath) {
  * @return {null}
  */
 function renderAllJson(req, res, next, mockPath) {
-  var data = jetpack.read(path.join(mockPath, 'apis', 'all.json'), 'json');
+  var data = jetpack.read(path.join(mockPath, '_apis', 'all.json'), 'json');
   data = JSON.stringify(data);
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json;charset=utf-8');
