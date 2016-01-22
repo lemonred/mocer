@@ -1,4 +1,5 @@
-# mocer [![Build Status](https://travis-ci.org/forsigner/mocer.svg?branch=master)](https://travis-ci.org/forsigner/mocer)
+# mocer [![Build Status](https://travis-ci.org/forsigner/mocer.svg?branch=master)](https://travis-ci.org/forsigner/mocer) [![NPM Version](http://img.shields.io/npm/v/mocer.svg?style=flat)](https://www.npmjs.org/package/mocer)
+
 Setup a mock server easily.
 
 Why use this module?
