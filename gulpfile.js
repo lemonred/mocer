@@ -11,19 +11,19 @@ var autoprefixer = require('autoprefixer');
 gulp.task('default', ['bundle:js', 'bundle:css', 'watch']);
 
 gulp.task('bundle:js', function () {
-  browserify('./assets/app.js')
+  browserify('./assets/js/app.js')
     .transform('babelify', { presets: ['es2015'] })
     .bundle()
-    .pipe(fs.createWriteStream('./assets/bundle.js'));
+    .pipe(fs.createWriteStream('./assets/js/mocer.app.js'));
 });
 
 gulp.task('bundle:css', function () {
-  return gulp.src('./assets/*.scss')
+  return gulp.src('./assets/sass/*.scss')
     .pipe(sourcemaps.init())
     .pipe(sass().on('error', sass.logError))
     .pipe(postcss([autoprefixer({ browsers: ['last 2 version'] })]))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('./assets'));
+    .pipe(gulp.dest('./assets/css'));
 });
 
 gulp.task('watch', function () {

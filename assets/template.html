@@ -4,9 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>api</title>
-  <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-  <!-- <link href="//cdn.bootcss.com/highlight.js/8.9.0/styles/default.min.css" rel="stylesheet"> -->
-  <link href="//cdn.bootcss.com/highlight.js/8.8.0/styles/github.min.css" rel="stylesheet">
+  <link href="mocer.app.css" rel="stylesheet">
 </head>
 
 <body ng-controller="AppController as vm">
@@ -35,53 +33,8 @@
     </div>
   </div>
 
-  <script src="//cdn.bootcss.com/jquery/3.0.0-alpha1/jquery.min.js"></script>
-  <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.js"></script>
-  <script src="//cdn.bootcss.com/angular.js/1.5.0-beta.1/angular.min.js"></script>
-  <script src="//cdn.bootcss.com/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
-  <script src="//cdn.bootcss.com/marked/0.3.5/marked.js"></script>
-  <script src="//cdn.bootcss.com/highlight.js/8.9.1/highlight.min.js"></script>
+  <script src="mocer.app.js"></script>
 
-  <script type="text/javascript">
-    angular
-      .module('app', [
-        'ui.router'
-      ])
-      .controller('AppController', function($scope, $location, $http) {
-        var vm = this;
-
-        vm.location = $location;
-        $http.get('/_apis/all').then(function(data) {
-          vm.apis = [];
-          data.data.forEach(function(item) {
-            vm.apis.push({
-              res: marked(item.res),
-              url: item.url,
-              method: item.method
-            });
-          });
-
-          $scope.$watch('vm.location.path()', function(path) {
-            path = path || '/0';
-            var index = Number(path.replace(/\//, ''));
-            $('#code').html(vm.apis[index].res)
-            $('#url').html( vm.apis[index].method + '   ' + vm.apis[index].url)
-            vm.index = index;
-            highlight();
-          });
-
-        });
-      });
-
-    angular.bootstrap(document, ['app']);
-
-    ////////////////////////////////////////////
-    function highlight() {
-      $('pre code').each(function(i, block) {
-        hljs.highlightBlock(block);
-      });
-    }
-  </script>
 </body>
 
 </html>

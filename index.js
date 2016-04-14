@@ -40,6 +40,10 @@ function mock(root, options) {
       renderTemplate(req, res, next, root);
     } else if (req.url === '/_apis/all') {
       renderAllJson(req, res, next, root);
+    } else if (req.url.indexOf('mocer.app.css') > -1) {
+      renderStyle(req, res, next, root);
+    } else if (req.url.indexOf('mocer.app.js') > -1) {
+      renderJS(req, res, next, root);
     } else {
       renderApis(req, res, next, root);
     }
@@ -78,9 +82,12 @@ function getMockFilePath(mockPath, req, callback) {
  * @return {null}
  */
 function createTemplate(mockPath) {
-  var src = path.join(__dirname, 'template.html');
+  var src = path.join(__dirname, 'assets', 'template.html');
   var dest = path.join(mockPath, '_apis', 'index.html');
   jetpack.copy(src, dest, { overwrite: true });
+  jetpack.copy(path.join(__dirname, 'assets', 'js', 'mocer.app.js'), path.join(mockPath, '_apis', 'mocer.app.js'), { overwrite: true });
+  jetpack.copy(path.join(__dirname, 'assets', 'css', 'mocer.app.css'), path.join(mockPath, '_apis', 'mocer.app.css'), { overwrite: true });
+
 }
 
 /**
@@ -139,6 +146,40 @@ function renderAllJson(req, res, next, mockPath) {
   data = JSON.stringify(data);
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json;charset=utf-8');
+  res.end(data);
+  return;
+}
+
+/**
+ * render Style
+ *
+ * @private
+ * @param {string} mockPath
+ * @param {object} res
+ * @param {object} next
+ * @return {null}
+ */
+function renderStyle(req, res, next, mockPath) {
+  var data = jetpack.read(path.join(mockPath, '_apis', 'mocer.app.css'));
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/css');
+  res.end(data);
+  return;
+}
+
+/**
+ * render JS
+ *
+ * @private
+ * @param {string} mockPath
+ * @param {object} res
+ * @param {object} next
+ * @return {null}
+ */
+function renderJS(req, res, next, mockPath) {
+  var data = jetpack.read(path.join(mockPath, '_apis', 'mocer.app.js'));
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/javascript');
   res.end(data);
   return;
 }
