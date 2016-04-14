@@ -10,6 +10,41 @@ angular.module('app', []).controller('AppController', function ($scope, $locatio
   var vm = this;
 
   vm.location = $location;
+
+  vm.treedata = [{
+    label: 'User',
+    id: 'role1',
+    children: [{
+      label: 'subUser1',
+      id: 'role11',
+      children: []
+    }, {
+      label: 'subUser2',
+      id: 'role12',
+      children: [{
+        label: 'subUser2-1',
+        id: 'role121',
+        children: [{
+          label: 'subUser2-1-1',
+          id: 'role1211',
+          children: []
+        }, {
+          label: 'subUser2-1-2',
+          id: 'role1212',
+          children: []
+        }]
+      }]
+    }]
+  }, {
+    label: 'Admin',
+    id: 'role2',
+    children: []
+  }, {
+    label: 'Guest',
+    id: 'role3',
+    children: []
+  }];
+
   $http.get('/_apis/all').then(function (data) {
     vm.apis = [];
     data.data.forEach(function (item) {
@@ -29,7 +64,39 @@ angular.module('app', []).controller('AppController', function ($scope, $locatio
       highlight();
     });
   });
-});
+}).directive('treeModel', ['$compile', function ($compile) {
+  return {
+    restrict: 'A',
+    link: function link(scope, element, attrs) {
+
+      // tree id
+      var treeId = attrs.treeId;
+
+      // tree model
+      var treeModel = attrs.treeModel;
+
+      // node id
+      var nodeId = attrs.nodeId || 'id';
+
+      // node label
+      var nodeLabel = attrs.nodeLabel || 'label';
+
+      // children
+      var nodeChildren = attrs.nodeChildren || 'children';
+
+      // tree template
+      var template = '\n          <ul>\n            <li ng-repeat="node in ' + treeModel + '">\n              <i class="expanded" ng-show="node.' + nodeChildren + '.length && !node.collapsed" ng-click="' + treeId + '.selectNodeHead(node)"></i>\n              <i class="normal" ng-hide="node.' + nodeChildren + '.length"></i>\n              <span ng-class="node.selected" ng-click="' + treeId + '.selectNodeLabel(node)">{{node.' + nodeLabel + '}}</span>\n              <div\n                tree-id="' + treeId + '"\n                tree-model="node.' + nodeChildren + '"\n                node-id="' + nodeId + '"\n                node-label="' + nodeLabel + '"\n                node-children="' + nodeChildren + '"\n              ></div>\n            </li>\n          </ul>\n        ';
+
+      // check tree id, tree model
+      if (!treeId && !treeModel) {
+        return;
+      }
+
+      // Rendering template.
+      element.html('').append($compile(template)(scope));
+    }
+  };
+}]);
 
 angular.bootstrap(document, ['app']);
 
