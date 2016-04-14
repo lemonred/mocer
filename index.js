@@ -61,7 +61,7 @@ function getMockFilePath(mockPath, req, callback) {
   var query = url.parse(req.url).query;
   var mockFilePath = path.join(mockPath, mockUrlPath + '.' + req.method + '.md');
 
-  fs.exists(mockFilePath, function(exists) {
+  fs.exists(mockFilePath, function (exists) {
     if (exists) {
       return callback(mockFilePath);
     }
@@ -80,7 +80,7 @@ function getMockFilePath(mockPath, req, callback) {
 function createTemplate(mockPath) {
   var src = path.join(__dirname, 'template.html');
   var dest = path.join(mockPath, '_apis', 'index.html');
-  jetpack.copy(src, dest, {overwrite: true});
+  jetpack.copy(src, dest, { overwrite: true });
 }
 
 /**
@@ -91,16 +91,16 @@ function createTemplate(mockPath) {
  * @return {null}
  */
 function createAllJson(mockPath) {
-  var paths = jetpack.find(mockPath, {matching: ['*.md']});
+  var paths = jetpack.find(mockPath, { matching: ['*.md'] });
   var data = [];
 
-  paths.forEach(function(item) {
+  paths.forEach(function (item) {
     if (item.indexOf('_apis') < 0) {
       var res = jetpack.read(item);
       var index = mockPath.lastIndexOf(path.sep);
       var splitStr = mockPath.substring(index);
       var arr = item.split(splitStr)[1].split('.');
-      var item = {url: arr[0], method: arr[1], res: res};
+      var item = { url: arr[0], method: arr[1], res: res };
       data.push(item);
     }
   });
@@ -147,7 +147,7 @@ function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
   var status = querystring.parse(query)._status || '200';
 
-  getMockFilePath(mockPath, req, function(mockFilePath) {
+  getMockFilePath(mockPath, req, function (mockFilePath) {
     if (!mockFilePath) {
       return next();
     }
@@ -161,7 +161,7 @@ function renderApis(req, res, next, mockPath) {
       return next();
     }
 
-    arr.forEach(function(item) {
+    arr.forEach(function (item) {
       if (item.indexOf('<response=200>') > -1) {
         resStr = item.toString();
       }
