@@ -11,73 +11,34 @@ angular
     var vm = this;
 
     vm.location = $location;
+    var apis;
 
-    vm.treedata = [
-      {
-        label: 'User',
-        id: 'role1',
-        children: [
-          {
-            label: 'subUser1',
-            id: 'role11',
-            children: []
-          },
-          {
-            label: 'subUser2',
-            id: 'role12',
-            children: [
-              {
-                label: 'subUser2-1',
-                id: 'role121',
-                children: [
-                  {
-                    label: 'subUser2-1-1',
-                    id: 'role1211',
-                    children: []
-                  },
-                  {
-                    label: 'subUser2-1-2',
-                    id: 'role1212',
-                    children: []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        label: 'Admin',
-        id: 'role2',
-        children: []
-      },
-      {
-        label: 'Guest',
-        id: 'role3',
-        children: []
-      }
-    ];
+    $http.get('/_apis/all')
+      .then(function (res) {
+        var treeData = [];
+        treeData.push(res.data.tree);
+        vm.treeData = treeData;
+        apis = res.data.apis;
 
-    $http.get('/_apis/all').then(function (data) {
-      vm.apis = [];
-      data.data.forEach(function (item) {
-        vm.apis.push({
-          res: marked(item.res),
-          url: item.url,
-          method: item.method
-        });
       });
 
-      $scope.$watch('vm.location.path()', function (path) {
-        path = path || '/0';
-        var index = Number(path.replace(/\//, ''));
-        $('#code').html(vm.apis[index].res);
-        $('#url').html(vm.apis[index].method + '   ' + vm.apis[index].url);
-        vm.index = index;
-        highlight();
+    $scope.$on('selectNodeSuccess', function (e, node) {
+      var reg = /\.GET\.md$|\.DELETE\.md$|\.PUT\.md$|\.POST\.md$|\.PATCH\.md$/;
+      var url = '/' + node.path.replace(reg, '');
+      var data = apis.find(function (item) {
+        return item.url === url;
       });
 
+      $('#code').html(marked(data.res));
+      highlight();
     });
+
+    // //////////////////////////////////////////
+    function highlight() {
+      $('pre code').each(function (i, block) {
+        hljs.highlightBlock(block);
+      });
+    }
   })
 
   .directive('treeModel', ['$compile', function ($compile) {
@@ -106,7 +67,7 @@ angular
             <li ng-repeat="node in ${treeModel}">
               <i class="expanded" ng-show="node.${nodeChildren}.length && !node.collapsed" ng-click="${treeId}.selectNodeHead(node)"></i>
               <i class="normal" ng-hide="node.${nodeChildren}.length"></i>
-              <span ng-class="node.selected" ng-click="${treeId}.selectNodeLabel(node)">{{node.${nodeLabel}}}</span>
+              <span ng-class="node.selected" ng-click="selectNode(node)">{{node.${nodeLabel}}}</span>
               <div
                 tree-id="${treeId}"
                 tree-model="node.${nodeChildren}"
@@ -123,6 +84,11 @@ angular
           return;
         }
 
+        // if node label clicks,
+        scope.selectNode = function (node) {
+          scope.$emit('selectNodeSuccess', node);
+        };
+
         // Rendering template.
         element.html('').append($compile(template)(scope));
 
@@ -131,10 +97,3 @@ angular
   }]);
 
 angular.bootstrap(document, ['app']);
-
-// //////////////////////////////////////////
-function highlight() {
-  $('pre code').each(function (i, block) {
-    hljs.highlightBlock(block);
-  });
-}

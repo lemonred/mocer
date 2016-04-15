@@ -11,6 +11,7 @@ var querystring = require('querystring');
 var jetpack = require('fs-jetpack');
 var strip = require('strip-comments');
 var colors = require('colors');
+var dirTree = require('directory-tree');
 
 /**
  * Module exports.
@@ -99,7 +100,9 @@ function createTemplate(mockPath) {
  */
 function createAllJson(mockPath) {
   var paths = jetpack.find(mockPath, { matching: ['*.md'] });
-  var data = [];
+  var data = {
+    apis: []
+  };
 
   paths.forEach(function (item) {
     if (item.indexOf('_apis') < 0) {
@@ -108,9 +111,11 @@ function createAllJson(mockPath) {
       var splitStr = mockPath.substring(index);
       var arr = item.split(splitStr)[1].split('.');
       var item = { url: arr[0], method: arr[1], res: res };
-      data.push(item);
+      data.apis.push(item);
     }
   });
+
+  data.tree = dirTree.directoryTree(mockPath, ['.md']);
 
   jetpack.write(path.join(mockPath, '_apis', 'all.json'), data);
 }
