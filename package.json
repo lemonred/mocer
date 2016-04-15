@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "angular": "^1.5.3",
+    "angular-ui-router": "^0.2.18",
     "autoprefixer": "^6.3.6",
     "autoprefixer-core": "^6.0.1",
     "babel-eslint": "4.1.6",

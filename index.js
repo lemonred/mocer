@@ -104,13 +104,13 @@ function createAllJson(mockPath) {
     apis: []
   };
 
-  paths.forEach(function (item) {
+  paths.forEach(function (item, i) {
     if (item.indexOf('_apis') < 0) {
       var res = jetpack.read(item);
       var index = mockPath.lastIndexOf(path.sep);
       var splitStr = mockPath.substring(index);
       var arr = item.split(splitStr)[1].split('.');
-      var item = { url: arr[0], method: arr[1], res: res };
+      var item = { path: item,  url: arr[0], method: arr[1], res: res, id: i };
       data.apis.push(item);
     }
   });
