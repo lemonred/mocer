@@ -55,7 +55,7 @@
   "files": [
     "LICENSE",
     "index.js",
-    "template.html",
+    "assets/**/*",
     "bin/mocer.js"
   ],
   "engines": {
