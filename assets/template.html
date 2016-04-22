@@ -8,33 +8,25 @@
 </head>
 
 <body ng-controller="AppController as vm">
-  <div class="container" style="width: 1300px; margin: auto">
-    <div class="row" style="100%">
-      <div class="col-md-5">
-        <div class=" affix" style="height: 100%; overflow: auto; padding-top: 20px; width: 505px;">
 
-          <h4 id="title">All Apis
-            <small>(点击url查看详情)</small>
-          </h4>
-          <div
-            class="tree-view"
-            angular-treeview="true"
-            tree-id="abc"
-            tree-model="vm.treeData"
-            node-id="path"
-            node-label="name"
-            node-children="children" >
-          </div>
-        </div>
+  <div class="main clearfix">
 
+    <div class="menu-box">
+      <div
+        class="tree-view"
+        tree-view
+        tree-id="abc"
+        tree-model="vm.treeData"
+        node-id="path"
+        node-label="name"
+        node-children="children" >
       </div>
-      <div class="col-md-7" style="padding-top: 20px;">
-        <h4 id="title">Details for : <span class="url" id="url">{{api.url}}</span></h4>
-        <div ui-view></div>
-        </div>
-      </div>
-
     </div>
+
+    <div class="content-box">
+      <div ui-view></div>
+    </div>
+
   </div>
 
   <script src="mocer.app.js"></script>

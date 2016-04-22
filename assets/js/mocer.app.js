@@ -6,11 +6,11 @@ var angular = require('angular');
 var hljs = require('highlight.js');
 var marked = require('marked');
 require('angular-ui-router');
+require('ngTreeView');
 
-angular.module('app', ['ui.router']).controller('AppController', function ($scope, $location, $http, $state) {
+angular.module('app', ['ui.router', require('ngTreeView').name]).controller('AppController', function ($scope, $location, $http, $state) {
   var vm = this;
-
-  vm.location = $location;
+  var path = decodeURIComponent($location.search().path);
   var apis;
 
   $http.get('/_apis/all').then(function (res) {
@@ -18,82 +18,62 @@ angular.module('app', ['ui.router']).controller('AppController', function ($scop
     treeData.push(res.data.tree);
     vm.treeData = treeData;
     apis = res.data.apis;
+
+    $scope.$broadcast('refreshSuccess', { path: path, apis: apis });
+  }).catch(function (err) {
+    throw new Error(err);
   });
 
   $scope.$on('selectNodeSuccess', function (e, node) {
-    var reg = /\.GET\.md$|\.DELETE\.md$|\.PUT\.md$|\.POST\.md$|\.PATCH\.md$/;
-    var url = '/' + node.path.replace(reg, '');
-    var data = apis.find(function (item) {
-      return item.path.indexOf(node.path) > -1;
-    });
+    if (node.type === 'file') {
+      $state.go('url', { path: encodeURIComponent(node.path) });
+      $scope.$broadcast('selectMenuSuccess', { path: node.path, apis: apis });
+    }
+  });
+}).controller('ContentController', function ($scope, $timeout) {
+  var vm = this;
 
-    // $state.go('urls', { id: data.id + 1 });
+  $scope.$on('selectMenuSuccess', function (e, data) {
+    render(data.path, data.apis);
+  });
 
-    console.log(marked(data.res));
-
-    $('#code').html(marked(data.res));
-    highlight();
+  $scope.$on('refreshSuccess', function (e, data) {
+    render(data.path, data.apis);
   });
 
   // //////////////////////////////////////////
+  function render(path, apis) {
+    var reg = /\.GET\.md$|\.DELETE\.md$|\.PUT\.md$|\.POST\.md$|\.PATCH\.md$/;
+    var url = '/' + path.replace(reg, '');
+
+    var data = apis.find(function (item) {
+      return item.path.indexOf(path) > -1;
+    });
+
+    $timeout(function () {
+      $('#code').html(marked(data.res));
+      highlight();
+    }, 100);
+  }
+
   function highlight() {
     $('pre code').each(function (i, block) {
       hljs.highlightBlock(block);
     });
   }
-}).directive('treeModel', ['$compile', function ($compile) {
-  return {
-    restrict: 'A',
-    link: function link(scope, element, attrs) {
+}).config(function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/url');
 
-      // tree id
-      var treeId = attrs.treeId;
-
-      // tree model
-      var treeModel = attrs.treeModel;
-
-      // node id
-      var nodeId = attrs.nodeId || 'id';
-
-      // node label
-      var nodeLabel = attrs.nodeLabel || 'label';
-
-      // children
-      var nodeChildren = attrs.nodeChildren || 'children';
-
-      // tree template
-      var template = '\n          <ul>\n            <li ng-repeat="node in ' + treeModel + '">\n              <i class="expanded" ng-show="node.' + nodeChildren + '.length && !node.collapsed" ng-click="' + treeId + '.selectNodeHead(node)"></i>\n              <i class="normal" ng-hide="node.' + nodeChildren + '.length"></i>\n              <i ng-class="{\'icono-document\': node.type===\'directory\', \'icono-folder\': node.type===\'file\'}"></i>\n              <span ng-class="node.selected" ng-click="selectNode(node)">{{node.' + nodeLabel + '}}</span>\n              <div\n                tree-id="' + treeId + '"\n                tree-model="node.' + nodeChildren + '"\n                node-id="' + nodeId + '"\n                node-label="' + nodeLabel + '"\n                node-children="' + nodeChildren + '"\n              ></div>\n            </li>\n          </ul>\n        ';
-
-      // check tree id, tree model
-      if (!treeId && !treeModel) {
-        return;
-      }
-
-      // if node label clicks,
-      scope.selectNode = function (node) {
-        scope.$emit('selectNodeSuccess', node);
-      };
-
-      // Rendering template.
-      element.html('').append($compile(template)(scope));
-    }
-  };
-}]).config(function ($stateProvider, $urlRouterProvider) {
-  //
-  // For any unmatched url, redirect to /state1
-  $urlRouterProvider.otherwise('/urls/1');
-
-  //
-  // Now set up the states
-  $stateProvider.state('urls', {
-    url: '/urls/:id',
-    template: '<div class="code" id="code" class="">'
+  $stateProvider.state('url', {
+    url: '/url?path',
+    template: '<div class="code" id="code"></div>',
+    controller: 'ContentController as vm'
   });
 });
 
 angular.bootstrap(document, ['app']);
 
-},{"angular":4,"angular-ui-router":2,"highlight.js":6,"jquery":159,"marked":160}],2:[function(require,module,exports){
+},{"angular":4,"angular-ui-router":2,"highlight.js":6,"jquery":159,"marked":160,"ngTreeView":161}],2:[function(require,module,exports){
 /**
  * State-based routing for AngularJS
  * @version v0.2.18
@@ -62295,4 +62275,92 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 }());
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],161:[function(require,module,exports){
+module.exports = angular
+  .module('ngTreeView', [])
+  .directive('treeView', ngTreeView);
+
+ngTreeView.$inject = ['$compile', '$timeout'];
+
+function ngTreeView($compile, $timeout) {
+  var times = 0;
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      times++;
+
+      // tree id
+      var treeId = attrs.treeId;
+
+      // tree model
+      var treeModel = attrs.treeModel;
+
+      // node id
+      var nodeId = attrs.nodeId || 'id';
+
+      // node label
+      var nodeLabel = attrs.nodeLabel || 'label';
+
+      // children
+      var nodeChildren = attrs.nodeChildren || 'children';
+
+      // tree template
+      var template = `
+          <ul>
+            <li ng-repeat="node in ${treeModel}">
+              <div class="tree-view-node level-${times}" ng-class="{selected: node.selected}" ng-click="selectNode(node, ${treeModel})">
+                  <i class="icon-angle-right" ng-if="node.${nodeChildren}.length && node.collapsed"></i>
+                  <i class="icon-angle-down" ng-if="node.${nodeChildren}.length && !node.collapsed"></i>
+                  <i class="icon-folder" ng-if="node.${nodeChildren}.length"></i>
+                  <i class="icon-doc-text" ng-if="!node.${nodeChildren}.length"></i>
+                  <span>{{node.${nodeLabel}}}</span>
+              </div>
+              <div
+                ng-if="node.${nodeChildren}.length"
+                ng-show="!node.collapsed"
+                tree-view
+                tree-id="${treeId}"
+                tree-model="node.${nodeChildren}"
+                node-id="${nodeId}"
+                node-label="${nodeLabel}"
+                node-children="${nodeChildren}"
+              ></div>
+            </li>
+          </ul>
+        `;
+
+      // check tree id, tree model
+      if (!treeId && !treeModel) {
+        return;
+      }
+
+      scope[treeId] = scope[treeId] || {};
+
+      // if node label clicks,
+      scope.selectNode = function (node, list) {
+        scope.$emit('selectNodeSuccess', node);
+
+        if (node.children && node.children.length) {
+          node.collapsed = !node.collapsed;
+        }
+
+        //remove highlight from previous node
+        if (scope[treeId].currentNode && scope[treeId].currentNode.selected) {
+          scope[treeId].currentNode.selected = false;
+        }
+
+        node.selected = true;
+
+        //set currentNode
+        scope[treeId].currentNode = node;
+      };
+
+      // Rendering template.
+      element.html('').append($compile(template)(scope));
+
+    }
+  };
+
+}
+
 },{}]},{},[1]);

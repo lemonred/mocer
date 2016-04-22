@@ -5,13 +5,13 @@ var angular = require('angular');
 var hljs = require('highlight.js');
 var marked = require('marked');
 require('angular-ui-router');
+require('ngTreeView');
 
 angular
-  .module('app', ['ui.router'])
+  .module('app', ['ui.router', require('ngTreeView').name])
   .controller('AppController', function ($scope, $location, $http, $state) {
     var vm = this;
-
-    vm.location = $location;
+    var path = decodeURIComponent($location.search().path);
     var apis;
 
     $http.get('/_apis/all')
@@ -21,97 +21,61 @@ angular
         vm.treeData = treeData;
         apis = res.data.apis;
 
+        $scope.$broadcast('refreshSuccess', { path: path, apis: apis });
+      })
+      .catch(function (err) {
+        throw new Error(err);
       });
 
     $scope.$on('selectNodeSuccess', function (e, node) {
-      var reg = /\.GET\.md$|\.DELETE\.md$|\.PUT\.md$|\.POST\.md$|\.PATCH\.md$/;
-      var url = '/' + node.path.replace(reg, '');
-      var data = apis.find(function (item) {
-        return item.path.indexOf(node.path) > -1;
-      });
+      if (node.type === 'file') {
+        $state.go('url', { path: encodeURIComponent(node.path) });
+        $scope.$broadcast('selectMenuSuccess', { path: node.path, apis: apis });
+      }
+    });
 
-      // $state.go('urls', { id: data.id + 1 });
+  })
+  .controller('ContentController', function ($scope, $timeout) {
+    var vm = this;
 
-      console.log(marked(data.res));
+    $scope.$on('selectMenuSuccess', function (e, data) {
+      render(data.path, data.apis);
+    });
 
-      $('#code').html(marked(data.res));
-      highlight();
+    $scope.$on('refreshSuccess', function (e, data) {
+      render(data.path, data.apis);
     });
 
     // //////////////////////////////////////////
+    function render(path, apis) {
+      var reg = /\.GET\.md$|\.DELETE\.md$|\.PUT\.md$|\.POST\.md$|\.PATCH\.md$/;
+      var url = '/' + path.replace(reg, '');
+
+      var data = apis.find(function (item) {
+        return item.path.indexOf(path) > -1;
+      });
+
+      $timeout(function () {
+        $('#code').html(marked(data.res));
+        highlight();
+      }, 100);
+
+    }
+
     function highlight() {
       $('pre code').each(function (i, block) {
         hljs.highlightBlock(block);
       });
     }
-
   })
-  .directive('treeModel', ['$compile', function ($compile) {
-    return {
-      restrict: 'A',
-      link: function (scope, element, attrs) {
-
-        // tree id
-        var treeId = attrs.treeId;
-
-        // tree model
-        var treeModel = attrs.treeModel;
-
-        // node id
-        var nodeId = attrs.nodeId || 'id';
-
-        // node label
-        var nodeLabel = attrs.nodeLabel || 'label';
-
-        // children
-        var nodeChildren = attrs.nodeChildren || 'children';
-
-        // tree template
-        var template = `
-          <ul>
-            <li ng-repeat="node in ${treeModel}">
-              <i class="expanded" ng-show="node.${nodeChildren}.length && !node.collapsed" ng-click="${treeId}.selectNodeHead(node)"></i>
-              <i class="normal" ng-hide="node.${nodeChildren}.length"></i>
-              <i ng-class="{'icono-document': node.type==='directory', 'icono-folder': node.type==='file'}"></i>
-              <span ng-class="node.selected" ng-click="selectNode(node)">{{node.${nodeLabel}}}</span>
-              <div
-                tree-id="${treeId}"
-                tree-model="node.${nodeChildren}"
-                node-id="${nodeId}"
-                node-label="${nodeLabel}"
-                node-children="${nodeChildren}"
-              ></div>
-            </li>
-          </ul>
-        `;
-
-        // check tree id, tree model
-        if (!treeId && !treeModel) {
-          return;
-        }
-
-        // if node label clicks,
-        scope.selectNode = function (node) {
-          scope.$emit('selectNodeSuccess', node);
-        };
-
-        // Rendering template.
-        element.html('').append($compile(template)(scope));
-
-      }
-    };
-  }])
   .config(function ($stateProvider, $urlRouterProvider) {
-    //
-    // For any unmatched url, redirect to /state1
-    $urlRouterProvider.otherwise('/urls/1');
+    $urlRouterProvider.otherwise('/url');
 
-    //
-    // Now set up the states
     $stateProvider
-      .state('urls', {
-        url: '/urls/:id',
-        template: '<div class="code" id="code" class="">'
+      .state('url', {
+        url: '/url?path',
+        template: '<div class="code" id="code"></div>',
+        controller: 'ContentController as vm',
       });
   });
 
