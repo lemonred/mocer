@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>api</title>
+  <!-- build:css mocer.app.css -->
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="./node_modules/highlight.js/styles/github.css" />
+  <link rel="stylesheet" href="./node_modules/ngTreeView/dist/css/ngTreeView.css" />
+  <link rel="stylesheet" href="./node_modules/codemirror/lib/codemirror.css" />
+  <link rel="stylesheet" href="./assets/css/mocer.app.css" />
+  <!-- endbuild -->
+</head>
+
+<body ng-controller="AppController as vm">
+
+  <div class="main clearfix">
+
+    <div class="menu-box">
+      <div
+        class="tree-view"
+        tree-view
+        tree-id="abc"
+        tree-model="vm.treeData"
+        node-id="path"
+        node-label="name"
+        node-children="children" >
+      </div>
+    </div>
+
+    <div class="content-box">
+      <div ui-view></div>
+    </div>
+
+  </div>
+
+  <!-- build:js mocer.app.js -->
+  <script src="./node_modules/jquery/dist/jquery.js"></script>
+  <script src="./node_modules/angular/angular.js"></script>
+  <script src="./node_modules/highlight.js/lib/highlight.js"></script>
+  <script src="./node_modules/marked/marked.min.js"></script>
+  <script src="./node_modules/ngTreeView/dist/js/ngTreeView.js"></script>
+  <script src="./node_modules/codemirror/lib/codemirror.js"></script>
+  <script src="./node_modules/angular-ui-codemirror/src/ui-codemirror.js"></script>
+  <script src="./node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="./assets//js/mocer.app.js"></script>
+  <!-- endbuild -->
+
+</body>
+
+</html>

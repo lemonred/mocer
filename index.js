@@ -83,11 +83,11 @@ function getMockFilePath(mockPath, req, callback) {
  * @return {null}
  */
 function createTemplate(mockPath) {
-  var src = path.join(__dirname, 'assets', 'template.html');
+  var src = path.join(__dirname, 'dist', 'template.html');
   var dest = path.join(mockPath, '_apis', 'index.html');
   jetpack.copy(src, dest, { overwrite: true });
-  jetpack.copy(path.join(__dirname, 'assets', 'js', 'mocer.app.js'), path.join(mockPath, '_apis', 'mocer.app.js'), { overwrite: true });
-  jetpack.copy(path.join(__dirname, 'assets', 'css', 'mocer.app.css'), path.join(mockPath, '_apis', 'mocer.app.css'), { overwrite: true });
+  jetpack.copy(path.join(__dirname, 'dist', 'mocer.app.js'), path.join(mockPath, '_apis', 'mocer.app.js'), { overwrite: true });
+  jetpack.copy(path.join(__dirname, 'dist', 'mocer.app.css'), path.join(mockPath, '_apis', 'mocer.app.css'), { overwrite: true });
 
 }
 
