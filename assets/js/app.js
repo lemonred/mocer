@@ -1,5 +1,7 @@
 'use strict';
 
+var hljs =  require('highlight.js');
+
 angular
   .module('app', ['ui.router', 'ui.codemirror', 'ngTreeView'])
   .controller('AppController', function ($scope, $location, $http, $state) {
