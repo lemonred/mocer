@@ -10,6 +10,14 @@ h2 {
 h3 {
   font-size: 18px; }
 
+::-moz-selection {
+  color: gold;
+  background: red; }
+
+::selection {
+  color: gold;
+  background: red; }
+
 .tree-view ul {
   list-style: none; }
 

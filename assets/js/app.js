@@ -62,9 +62,10 @@ angular
       //   highlightFormatting: true
       // }
       //
+      mode: 'markdown'
+
       // mode: 'markdown'
-      // mode: 'markdown'
-      mode: 'xml'
+      // mode: 'xml'
     };
 
     setTimeout(() => {
@@ -84,12 +85,6 @@ angular
 
       // Initial code content...
       vm.code = data.res;
-      vm.code = ';; Scheme code in here.\n' +
-  '(define (double x)\n\t(* x x))\n\n\n' +
-  '<!-- XML code in here. -->\n' +
-  '<root>\n\t<foo>\n\t</foo>\n\t<bar/>\n</root>\n\n\n' +
-  '// Javascript code in here.\n' +
-  'function foo(msg) {\n\tvar r = Math.random();\n\treturn "" + r + " : " + msg;\n}';
 
       $timeout(function () {
         $('#code').html(marked(data.res));
