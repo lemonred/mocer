@@ -59,6 +59,8 @@
   "files": [
     "LICENSE",
     "index.js",
+    "template.html",
+    "dist/**/*",
     "assets/**/*",
     "bin/mocer.js"
   ],
