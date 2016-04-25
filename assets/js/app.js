@@ -97,13 +97,12 @@ angular
     var template = `
       <div class="clearfix workplace">
         <header>
-          {{vm.editting}}
           <h1>Mocer<span> - Setup mock server easy</span></h1>
-          <button ng-if="!vm.editting" class="btn btn-success btn-edit" ng-click="vm.edit()">Edit</button>
-          <button ng-if="vm.editting" class="btn btn-success btn-edit" ng-click="vm.save()">Save</button>
+          <button ng-if="!vm.editting" class="btn btn-default btn-edit" ng-click="vm.edit()">Edit</button>
+          <button ng-if="vm.editting" class="btn btn-default btn-edit" ng-click="vm.save()">Save</button>
         </header>
         <section>
-          <div ng-show="vm.editting" class="code-editor pull-left">
+          <div ng-if="vm.editting" class="code-editor pull-left">
             <textarea ui-codemirror="cmOption" ng-model="vm.codeContent"></textarea>
           </div>
           <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}"></div>
