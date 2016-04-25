@@ -45,6 +45,12 @@ function mock(root, options) {
       renderStyle(req, res, next, root);
     } else if (req.url.indexOf('mocer.app.js') > -1) {
       renderJS(req, res, next, root);
+    } else if (req.url.indexOf('/_apis/update-code') > -1) {
+      var a = { a: 1121 };
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json;charset=utf-8');
+      res.end(JSON.stringify(a));
+      return;
     } else {
       renderApis(req, res, next, root);
     }

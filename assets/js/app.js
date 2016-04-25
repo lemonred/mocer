@@ -1,6 +1,7 @@
 'use strict';
 
 var hljs =  require('highlight.js');
+var codeContent = '';
 
 angular
   .module('app', ['ui.router', 'ui.codemirror', 'ngTreeView'])
@@ -38,6 +39,7 @@ angular
   })
   .controller('ContentController', function ($scope, $timeout) {
     var vm = this;
+    vm.editting = false;
 
     $scope.$on('selectMenuSuccess', function (e, data) {
       render(data.path, data.apis);
@@ -48,31 +50,21 @@ angular
     });
 
     vm.edit = function () {
-      console.log(vm.code);
+      vm.codeContent = codeContent;
+      vm.editting = true;
+    };
+
+    vm.save = function () {
+      vm.editting = false;
     };
 
     // The ui-codemirror option
     $scope.cmOption = {
-      lineWrapping: true,
-      lineNumbers: true,
+      lineWrapping: false,
+      lineNumbers: false,
       indentWithTabs: true,
-
-      // mode: {
-      //   name: 'markdown',
-      //   highlightFormatting: true
-      // }
-      //
       mode: 'markdown'
-
-      // mode: 'markdown'
-      // mode: 'xml'
     };
-
-    setTimeout(() => {
-      $('pre code').each(function (i, block) {
-        hljs.highlightBlock(block);
-      });
-    }, 2000);
 
     // //////////////////////////////////////////
     function render(path, apis) {
@@ -84,9 +76,10 @@ angular
       });
 
       // Initial code content...
-      vm.code = data.res;
+      codeContent = data.res;
 
       $timeout(function () {
+
         $('#code').html(marked(data.res));
         highlight();
       }, 100);
@@ -98,16 +91,24 @@ angular
         hljs.highlightBlock(block);
       });
     }
+
   })
   .config(function ($stateProvider, $urlRouterProvider) {
     var template = `
-      <div class="code" id="code"></div>
-
-      <section>
-        <textarea ui-codemirror="cmOption" ng-model="vm.code"></textarea>
-      </section>
-
-      <button class="btn btn-success" ng-click="vm.edit()">Edit</button>
+      <div class="clearfix workplace">
+        <header>
+          {{vm.editting}}
+          <h1>Mocer<span> - Setup mock server easy</span></h1>
+          <button ng-if="!vm.editting" class="btn btn-success btn-edit" ng-click="vm.edit()">Edit</button>
+          <button ng-if="vm.editting" class="btn btn-success btn-edit" ng-click="vm.save()">Save</button>
+        </header>
+        <section>
+          <div ng-show="vm.editting" class="code-editor pull-left">
+            <textarea ui-codemirror="cmOption" ng-model="vm.codeContent"></textarea>
+          </div>
+          <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}"></div>
+        </section>
+      </div>
     `;
 
     $urlRouterProvider.otherwise('/url');

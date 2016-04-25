@@ -2,6 +2,7 @@
 'use strict';
 
 var hljs = require('highlight.js');
+var codeContent = '';
 
 angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('AppController', function ($scope, $location, $http, $state) {
   var vm = this;
@@ -33,6 +34,7 @@ angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('
   });
 }).controller('ContentController', function ($scope, $timeout) {
   var vm = this;
+  vm.editting = false;
 
   $scope.$on('selectMenuSuccess', function (e, data) {
     render(data.path, data.apis);
@@ -43,31 +45,21 @@ angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('
   });
 
   vm.edit = function () {
-    console.log(vm.code);
+    vm.codeContent = codeContent;
+    vm.editting = true;
+  };
+
+  vm.save = function () {
+    vm.editting = false;
   };
 
   // The ui-codemirror option
   $scope.cmOption = {
-    lineWrapping: true,
-    lineNumbers: true,
+    lineWrapping: false,
+    lineNumbers: false,
     indentWithTabs: true,
-
-    // mode: {
-    //   name: 'markdown',
-    //   highlightFormatting: true
-    // }
-    //
     mode: 'markdown'
-
-    // mode: 'markdown'
-    // mode: 'xml'
   };
-
-  setTimeout(function () {
-    $('pre code').each(function (i, block) {
-      hljs.highlightBlock(block);
-    });
-  }, 2000);
 
   // //////////////////////////////////////////
   function render(path, apis) {
@@ -79,9 +71,10 @@ angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('
     });
 
     // Initial code content...
-    vm.code = data.res;
+    codeContent = data.res;
 
     $timeout(function () {
+
       $('#code').html(marked(data.res));
       highlight();
     }, 100);
@@ -93,7 +86,7 @@ angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('
     });
   }
 }).config(function ($stateProvider, $urlRouterProvider) {
-  var template = '\n      <div class="code" id="code"></div>\n\n      <section>\n        <textarea ui-codemirror="cmOption" ng-model="vm.code"></textarea>\n      </section>\n\n      <button class="btn btn-success" ng-click="vm.edit()">Edit</button>\n    ';
+  var template = '\n      <div class="clearfix workplace">\n        <header>\n          {{vm.editting}}\n          <h1>Mocer<span> - Setup mock server easy</span></h1>\n          <button ng-if="!vm.editting" class="btn btn-success btn-edit" ng-click="vm.edit()">Edit</button>\n          <button ng-if="vm.editting" class="btn btn-success btn-edit" ng-click="vm.save()">Save</button>\n        </header>\n        <section>\n          <div ng-show="vm.editting" class="code-editor pull-left">\n            <textarea ui-codemirror="cmOption" ng-model="vm.codeContent"></textarea>\n          </div>\n          <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}"></div>\n        </section>\n      </div>\n    ';
 
   $urlRouterProvider.otherwise('/url');
 

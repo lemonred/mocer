@@ -7316,6 +7316,14 @@ div.CodeMirror-dragcursors {
 /* Help users use markselection to safely style text background */
 span.CodeMirror-selectedtext { background: none; }
 
+html,
+body,
+.main,
+.content-box,
+.workplace {
+  height: 100%;
+  overflow: hidden; }
+
 .hljs {
   background: transparent; }
 
@@ -7339,31 +7347,69 @@ h3 {
 .tree-view ul {
   list-style: none; }
 
-.main {
-  width: 100%; }
-  .main .menu-box {
-    width: 250px;
+.main .menu-box {
+  width: 250px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 100%;
+  border-right: 1px solid #dfdfdf; }
+
+.main .content-box {
+  margin-left: 250px; }
+  .main .content-box pre {
+    border: none;
+    background-color: #f7f7f7; }
+  .main .content-box .code {
+    background: #fff;
+    padding-top: 0;
+    border-radius: 4px; }
+  .main .content-box .method {
+    color: #999;
+    font-size: 12px; }
+  .main .content-box .url {
+    color: #d14; }
+  .main .content-box .list-group-item.activated {
+    background-color: #f0f0f0; }
+
+.workplace {
+  position: relative;
+  padding-top: 50px; }
+  .workplace header {
     position: absolute;
     top: 0;
-    left: 0;
-    min-height: 100%;
-    border-right: 1px solid #dfdfdf; }
-  .main .content-box {
-    margin-left: 250px;
-    padding: 20px; }
-    .main .content-box pre {
-      border: none;
-      background-color: #f7f7f7; }
-    .main .content-box .code {
-      background: #fff;
-      padding-top: 0;
-      border-radius: 4px; }
-    .main .content-box .method {
-      color: #999;
-      font-size: 12px; }
-    .main .content-box .url {
-      color: #d14; }
-    .main .content-box .list-group-item.activated {
-      background-color: #f0f0f0; }
+    width: 100%;
+    border-bottom: 1px solid #dfdfdf;
+    height: 50px; }
+    .workplace header h1 {
+      padding-left: 10px;
+      line-height: 11px; }
+      .workplace header h1 span {
+        color: #ccc;
+        font-size: 16px;
+        font-weight: normal; }
+    .workplace header .btn-edit {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      z-index: 100; }
+  .workplace section {
+    height: 100%;
+    overflow: hidden; }
+    .workplace section .code-preview {
+      width: 45%;
+      overflow-y: auto;
+      padding: 16px; }
+      .workplace section .code-preview.editting {
+        width: 45%; }
+    .workplace section .code-editor {
+      border-right: 1px solid #dfdfdf;
+      height: 100%;
+      overflow: hidden;
+      width: 100%; }
+      .workplace section .code-editor .CodeMirror {
+        height: 100% !important; }
+      .workplace section .code-editor pre {
+        background-color: #fff; }
 
 /*# sourceMappingURL=mocer.app.css.map */
