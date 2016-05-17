@@ -149,3 +149,6 @@ Transfer-Encoding: chunked
   "description" : "bad email format"
 }
 ```
+
+You can see the Complete Example:
+- [use with connect](https://github.com/forsigner/mocer-with-connect)
