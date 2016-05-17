@@ -198,6 +198,7 @@ function renderJS(req, res, next, mockPath) {
 function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
   var status = querystring.parse(query)._status || '200';
+  var delay = null;
 
   getMockFilePath(mockPath, req, function (mockFilePath) {
     if (!mockFilePath) {
@@ -208,6 +209,13 @@ function renderApis(req, res, next, mockPath) {
     var str = fs.readFileSync(mockFilePath, 'utf8');
     var arr = str.match(reg);
     var resStr = null;
+
+    // get Delay
+    var regDelay = /<delay=.*>/;
+    var delayArr =  str.match(regDelay);
+    if (delayArr) {
+      delay = parseInt(delayArr[0].split('=')[1].replace(/>/, ''), 10);
+    }
 
     if (!arr || !arr.length) {
       return next();
@@ -243,12 +251,23 @@ function renderApis(req, res, next, mockPath) {
     res.setHeader('Content-Type', 'application/json;charset=utf-8');
 
     if (resStr) {
-      res.end(resStr);
+      if (delay) {
+        setTimeout(function () {
+          res.end(resStr);
+        }, delay);
+      } else {
+        res.end(resStr);
+      }
     } else {
-      res.end();
+      if (delay) {
+        setTimeout(function () {
+          res.end();
+        }, delay);
+      } else {
+        res.end();
+      }
     }
 
     return;
-
   });
 }
