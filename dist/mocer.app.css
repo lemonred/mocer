@@ -6859,44 +6859,44 @@ github.com style (c) Vasily Polovnyov <vast@whiteants.net>
   font-weight: bold;
 }
 
-div[angular-treeview] {
+div[tree-view] {
   font-size: 13px;
 }
-div[angular-treeview] ul {
+div[tree-view] ul {
   margin: 0;
   padding: 0;
   list-style: none;
 }
-div[angular-treeview] ul li {
+div[tree-view] ul li {
   padding: 0;
   line-height: 2em;
 }
-div[angular-treeview] ul li .tree-view-node {
+div[tree-view] ul li .tree-view-node {
   padding-left: 18px;
 }
-div[angular-treeview] ul li .tree-view-node.selected {
+div[tree-view] ul li .tree-view-node.selected {
   background: #f0f0f0;
 }
-div[angular-treeview] ul li .tree-view-node:hover {
+div[tree-view] ul li .tree-view-node:hover {
   background: #f0f0f0;
   cursor: pointer;
 }
-div[angular-treeview] ul li .level-1 {
+div[tree-view] ul li .level-1 {
   padding-left: 20px;
 }
-div[angular-treeview] ul li .level-2 {
+div[tree-view] ul li .level-2 {
   padding-left: 40px;
 }
-div[angular-treeview] ul li .level-3 {
+div[tree-view] ul li .level-3 {
   padding-left: 60px;
 }
-div[angular-treeview] ul li .level-4 {
+div[tree-view] ul li .level-4 {
   padding-left: 80px;
 }
-div[angular-treeview] ul li .level-5 {
+div[tree-view] ul li .level-5 {
   padding-left: 16px;
 }
-div[angular-treeview] ul li .level-6 {
+div[tree-view] ul li .level-6 {
   padding-left: 16px;
 }
 @font-face {
