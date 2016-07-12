@@ -45,6 +45,7 @@
     "bootstrap": "^3.3.6",
     "browserify": "^13.0.0",
     "codemirror": "^5.14.2",
+    "showdown": "^1.4.2",
     "eslint": "1.10.3",
     "gulp": "^3.9.1",
     "gulp-postcss": "^6.1.0",
@@ -53,7 +54,6 @@
     "gulp-useref": "^3.0.8",
     "highlight.js": "^9.3.0",
     "jquery": "^2.2.3",
-    "marked": "^0.3.5",
     "ngTreeView": "^1.0.0"
   },
   "files": [

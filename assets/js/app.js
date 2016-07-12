@@ -1,6 +1,9 @@
 'use strict';
 
-var hljs =  require('highlight.js');
+var hljs = require('highlight.js');
+var showdown  = require('showdown');
+var converter = new showdown.Converter();
+
 var codeContent = '';
 
 angular
@@ -49,6 +52,14 @@ angular
       render(data.path, data.apis);
     });
 
+    $scope.$watch('vm.codeContent', function () {
+
+      $timeout(function () {
+        $('#code').html(converter.makeHtml(vm.codeContent));
+        highlight();
+      }, 100);
+    });
+
     vm.edit = function () {
       vm.codeContent = codeContent;
       vm.editting = true;
@@ -57,6 +68,7 @@ angular
     vm.save = function () {
       vm.editting = false;
     };
+
 
     // The ui-codemirror option
     $scope.cmOption = {
@@ -79,8 +91,7 @@ angular
       codeContent = data.res;
 
       $timeout(function () {
-
-        $('#code').html(marked(data.res));
+        $('#code').html(converter.makeHtml(data.res));
         highlight();
       }, 100);
 
@@ -105,7 +116,7 @@ angular
           <div ng-if="vm.editting" class="code-editor pull-left">
             <textarea ui-codemirror="cmOption" ng-model="vm.codeContent"></textarea>
           </div>
-          <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}"></div>
+          <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}">{{vm.codeContent}}</div>
         </section>
       </div>
     `;
