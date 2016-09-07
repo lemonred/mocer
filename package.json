@@ -29,7 +29,9 @@
     "connect": "3.4.0",
     "dev-ip": "1.0.1",
     "directory-tree": "^0.1.1",
+    "faker": "^3.1.0",
     "fs-jetpack": "0.7.0",
+    "mockjs": "^1.0.1-beta3",
     "opn": "3.0.2",
     "strip-comments": "0.4.1"
   },

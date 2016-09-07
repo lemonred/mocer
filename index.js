@@ -12,6 +12,8 @@ var jetpack = require('fs-jetpack');
 var strip = require('strip-comments');
 var colors = require('colors');
 var dirTree = require('directory-tree');
+var faker = require('faker');
+var handleData = require('./lib/handle-data');
 
 /**
  * Module exports.
@@ -92,8 +94,12 @@ function createTemplate(mockPath) {
   var src = path.join(__dirname, 'dist', 'template.html');
   var dest = path.join(mockPath, '_apis', 'index.html');
   jetpack.copy(src, dest, { overwrite: true });
-  jetpack.copy(path.join(__dirname, 'dist', 'mocer.app.js'), path.join(mockPath, '_apis', 'mocer.app.js'), { overwrite: true });
-  jetpack.copy(path.join(__dirname, 'dist', 'mocer.app.css'), path.join(mockPath, '_apis', 'mocer.app.css'), { overwrite: true });
+  jetpack.copy(path.join(__dirname, 'dist', 'mocer.app.js'), path.join(mockPath, '_apis', 'mocer.app.js'), {
+    overwrite: true
+  });
+  jetpack.copy(path.join(__dirname, 'dist', 'mocer.app.css'), path.join(mockPath, '_apis', 'mocer.app.css'), {
+    overwrite: true
+  });
 
 }
 
@@ -106,9 +112,7 @@ function createTemplate(mockPath) {
  */
 function createAllJson(mockPath) {
   var paths = jetpack.find(mockPath, { matching: ['*.md'] });
-  var data = {
-    apis: []
-  };
+  var data = { apis: [] };
 
   paths.forEach(function (item, i) {
     if (item.indexOf('_apis') < 0) {
@@ -116,7 +120,13 @@ function createAllJson(mockPath) {
       var index = mockPath.lastIndexOf(path.sep);
       var splitStr = mockPath.substring(index);
       var arr = item.split(splitStr)[1].split('.');
-      var item = { path: item,  url: arr[0], method: arr[1], res: res, id: i };
+      var item = {
+        path: item,
+        url: arr[0],
+        method: arr[1],
+        res: res,
+        id: i
+      };
       data.apis.push(item);
     }
   });
@@ -198,21 +208,21 @@ function renderJS(req, res, next, mockPath) {
 function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
   var status = querystring.parse(query)._status || '200';
-  var delay = null;
+  var delay = 0;
 
   getMockFilePath(mockPath, req, function (mockFilePath) {
     if (!mockFilePath) {
       return next();
     }
 
-    var reg = /```[js| js|javascript| javascript]([^`]+)```/gi;
+    var reg = /```\s*(js|javascript)([^`]+)```/gi;
     var str = fs.readFileSync(mockFilePath, 'utf8');
     var arr = str.match(reg);
     var resStr = null;
 
     // get Delay
     var regDelay = /<delay=.*>/;
-    var delayArr =  str.match(regDelay);
+    var delayArr = str.match(regDelay);
     if (delayArr) {
       delay = parseInt(delayArr[0].split('=')[1].replace(/>/, ''), 10);
     }
@@ -232,11 +242,13 @@ function renderApis(req, res, next, mockPath) {
     // }
 
     try {
-      resStr = resStr.replace(/```js|``` js|```javascript|``` javascript|```/gi, '');
+      var reg = /(```)\s*(js|javascript)|```/gi;
+      resStr = resStr.replace(reg, '');
       resStr = strip(resStr);
 
       if (resStr.search(/\{|\[/) > -1) {
         resStr = eval('(' + resStr + ')');
+        resStr = handleData(resStr);
         resStr = resStr ? JSON.stringify(resStr) : null;
       } else {
         resStr = null;
@@ -250,24 +262,12 @@ function renderApis(req, res, next, mockPath) {
     res.statusCode = status;
     res.setHeader('Content-Type', 'application/json;charset=utf-8');
 
-    if (resStr) {
-      if (delay) {
-        setTimeout(function () {
-          res.end(resStr);
-        }, delay);
-      } else {
+    setTimeout(function () {
+      if (resStr) {
         res.end(resStr);
-      }
-    } else {
-      if (delay) {
-        setTimeout(function () {
-          res.end();
-        }, delay);
       } else {
         res.end();
       }
-    }
-
-    return;
+    }, delay);
   });
 }
