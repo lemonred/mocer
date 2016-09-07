@@ -6,7 +6,7 @@ var colors = require('colors');
 var connect = require('connect');
 var opn = require('opn');
 var devip = require('dev-ip');
-var mock = require('../index');
+var mocer = require('../index');
 var pkg = require('../package.json');
 
 program
@@ -19,7 +19,7 @@ program
 program.on('--help', function() {
   console.log('  Examples:');
   console.log();
-  console.log('    n-mock -b .');
+  console.log('    mocer -b .');
   console.log();
 });
 
@@ -31,7 +31,7 @@ var baseDir = getBaseDir(program.baseDir);
 var port = program.port || 12306;
 
 var app = connect();
-app.use(mock(baseDir));
+app.use(mocer(baseDir));
 app.listen(port);
 
 openBrowser(port)

@@ -81,6 +81,10 @@ angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('
       return item.path.indexOf(path) > -1;
     });
 
+    if (!data) {
+      return;
+    }
+
     // Initial code content...
     codeContent = data.res;
 
@@ -96,7 +100,10 @@ angular.module('app', ['ui.router', 'ui.codemirror', 'ngTreeView']).controller('
     });
   }
 }).config(function ($stateProvider, $urlRouterProvider) {
-  var template = '\n      <div class="clearfix workplace">\n        <header>\n          <h1>Mocer<span> - Setup mock server easy</span></h1>\n          <button ng-if="!vm.editting" class="btn btn-default btn-edit" ng-click="vm.edit()">Edit</button>\n          <button ng-if="vm.editting" class="btn btn-default btn-edit" ng-click="vm.save()">Save</button>\n        </header>\n        <section>\n          <div ng-if="vm.editting" class="code-editor pull-left">\n            <textarea ui-codemirror="cmOption" ng-model="vm.codeContent"></textarea>\n          </div>\n          <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}">{{vm.codeContent}}</div>\n        </section>\n      </div>\n    ';
+
+  // <button ng-if="!vm.editting" class="btn btn-default btn-edit" ng-click="vm.edit()">Edit</button>
+  // <button ng-if="vm.editting" class="btn btn-default btn-edit" ng-click="vm.save()">Save</button>
+  var template = '\n      <div class="clearfix workplace">\n        <header>\n          <h1>Mocer<span> - Setup mock server easy</span></h1>\n        </header>\n        <section>\n          <div ng-if="vm.editting" class="code-editor pull-left">\n            <textarea ui-codemirror="cmOption" ng-model="vm.codeContent"></textarea>\n          </div>\n          <div class="code-preview pull-right" id="code" ng-class="{editting: vm.editting}">{{vm.codeContent}}</div>\n        </section>\n      </div>\n    ';
 
   $urlRouterProvider.otherwise('/url');
 

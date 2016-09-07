@@ -87,6 +87,10 @@ angular
         return item.path.indexOf(path) > -1;
       });
 
+      if (!data) {
+        return;
+      }
+
       // Initial code content...
       codeContent = data.res;
 
@@ -105,12 +109,13 @@ angular
 
   })
   .config(function ($stateProvider, $urlRouterProvider) {
+
+    // <button ng-if="!vm.editting" class="btn btn-default btn-edit" ng-click="vm.edit()">Edit</button>
+    // <button ng-if="vm.editting" class="btn btn-default btn-edit" ng-click="vm.save()">Save</button>
     var template = `
       <div class="clearfix workplace">
         <header>
           <h1>Mocer<span> - Setup mock server easy</span></h1>
-          <button ng-if="!vm.editting" class="btn btn-default btn-edit" ng-click="vm.edit()">Edit</button>
-          <button ng-if="vm.editting" class="btn btn-default btn-edit" ng-click="vm.save()">Save</button>
         </header>
         <section>
           <div ng-if="vm.editting" class="code-editor pull-left">
