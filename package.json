@@ -64,6 +64,7 @@
     "template.html",
     "dist/**/*",
     "assets/**/*",
+    "lib/**/*",
     "bin/mocer.js"
   ],
   "engines": {
