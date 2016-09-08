@@ -14,6 +14,7 @@ var colors = require('colors');
 var dirTree = require('directory-tree');
 var faker = require('faker');
 var handleData = require('./lib/handle-data');
+var parseMd = require('./lib/parse-md');
 
 /**
  * Module exports.
@@ -208,66 +209,30 @@ function renderJS(req, res, next, mockPath) {
 function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
   var status = querystring.parse(query)._status || '200';
-  var delay = 0;
 
   getMockFilePath(mockPath, req, function (mockFilePath) {
     if (!mockFilePath) {
       return next();
     }
 
-    var reg = /```\s*(js|javascript)([^`]+)```/gi;
-    var str = fs.readFileSync(mockFilePath, 'utf8');
-    var arr = str.match(reg);
-    var resStr = null;
+    var data = parseMd(mockFilePath);
 
-    // get Delay
-    var regDelay = /<delay=.*>/;
-    var delayArr = str.match(regDelay);
-    if (delayArr) {
-      delay = parseInt(delayArr[0].split('=')[1].replace(/>/, ''), 10);
-    }
-
-    if (!arr || !arr.length) {
-      return next();
-    }
-
-    arr.forEach(function (item) {
-      if (item.indexOf('<response=200>') > -1) {
-        resStr = item.toString();
-      }
-    });
-
-    // if (!resStr) {
-    //   return next();
+    // try {
+    //
+    // } catch (e) {
+    //   console.log(colors.red('something wrong in file: ' + mockFilePath));
+    //   console.log(colors.red(e));
     // }
-
-    try {
-      var reg = /(```)\s*(js|javascript)|```/gi;
-      resStr = resStr.replace(reg, '');
-      resStr = strip(resStr);
-
-      if (resStr.search(/\{|\[/) > -1) {
-        resStr = eval('(' + resStr + ')');
-        resStr = handleData(resStr);
-        resStr = resStr ? JSON.stringify(resStr) : null;
-      } else {
-        resStr = null;
-      }
-
-    } catch (e) {
-      console.log(colors.red('something wrong in file: ' + mockFilePath));
-      console.log(colors.red(e));
-    }
 
     res.statusCode = status;
     res.setHeader('Content-Type', 'application/json;charset=utf-8');
 
     setTimeout(function () {
-      if (resStr) {
-        res.end(resStr);
+      if (data.res.data) {
+        res.end(JSON.stringify(data.res.data));
       } else {
         res.end();
       }
-    }, delay);
+    }, data.res.delay);
   });
 }
