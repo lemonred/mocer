@@ -215,7 +215,8 @@ function renderApis(req, res, next, mockPath) {
       return next();
     }
 
-    var data = parseMd(mockFilePath);
+    var str = fs.readFileSync(mockFilePath, 'utf8');
+    var data = parseMd(str);
 
     // try {
     //
