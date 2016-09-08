@@ -9,7 +9,6 @@ var path = require('path');
 var url = require('url');
 var querystring = require('querystring');
 var jetpack = require('fs-jetpack');
-var strip = require('strip-comments');
 var colors = require('colors');
 var dirTree = require('directory-tree');
 var faker = require('faker');
