@@ -227,12 +227,16 @@ function renderApis(req, res, next, mockPath) {
     res.statusCode = status;
     res.setHeader('Content-Type', 'application/json;charset=utf-8');
 
-    setTimeout(function () {
-      if (data.res.data) {
-        res.end(JSON.stringify(data.res.data));
-      } else {
-        res.end();
-      }
-    }, data.res.delay);
+    (function (dataRes, response) {
+      setTimeout(setData(dataRes, response), dataRes.delay);
+    })(data.res, res);
   });
+}
+
+function setData(dataRes, response) {
+  if (dataRes.data) {
+    response.end(JSON.stringify(dataRes.data));
+  } else {
+    response.end();
+  }
 }
