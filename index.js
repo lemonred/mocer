@@ -210,6 +210,7 @@ function renderApis(req, res, next, mockPath) {
   var status = querystring.parse(query)._status || '200';
 
   getMockFilePath(mockPath, req, function (mockFilePath) {
+    
     if (!mockFilePath) {
       return next();
     }
@@ -224,19 +225,17 @@ function renderApis(req, res, next, mockPath) {
     //   console.log(colors.red(e));
     // }
 
-    res.statusCode = status;
-    res.setHeader('Content-Type', 'application/json;charset=utf-8');
+   res.statusCode = status;
+   res.setHeader('Content-Type', 'application/json;charset=utf-8');
 
-    (function (dataRes, response) {
-      setTimeout(setData(dataRes, response), dataRes.delay);
-    })(data.res, res);
-  });
-}
-
-function setData(dataRes, response) {
-  if (dataRes.data) {
-    response.end(JSON.stringify(dataRes.data));
-  } else {
-    response.end();
-  }
+   var setData = function(dataRes, response) {
+     if (dataRes.data) {
+         response.end(JSON.stringify(dataRes.data));
+     } else {
+         response.end();
+     }
+   }
+   
+   setTimeout(setData(data.res, res), data.res.delay);
+   });
 }
