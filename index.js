@@ -48,7 +48,6 @@ function mock(root, options) {
     } else if (req.url.indexOf('mocer.app.js') > -1) {
       renderJS(req, res, next, root);
     } else if (req.url.indexOf('/_apis/update-code') > -1) {
-      var a = { a: 1121 };
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json;charset=utf-8');
       res.end(JSON.stringify(a));
@@ -69,18 +68,27 @@ function mock(root, options) {
  * @param {object} req
  * @return {string}
  */
-function getMockFilePath(mockPath, req, callback) {
+function getMockFilePath(mockPath, req) {
   var mockUrlPath = url.parse(req.url).pathname;
   var query = url.parse(req.url).query;
   var mockFilePath = path.join(mockPath, mockUrlPath + '.' + req.method + '.md');
 
-  fs.exists(mockFilePath, function (exists) {
-    if (exists) {
-      return callback(mockFilePath);
+  if(fsExistsSync(mockFilePath)) {
+    return mockFilePath;
+  }
+
+  return null;
+
+  //////////////////
+  function fsExistsSync(path) {
+    try {
+      fs.accessSync(path, fs.F_OK);
+    } catch (e) {
+      return false;
     }
 
-    return callback(false);
-  });
+    return true;
+  }
 }
 
 /**
@@ -208,34 +216,24 @@ function renderJS(req, res, next, mockPath) {
 function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
   var status = querystring.parse(query)._status || '200';
+  var mockFilePath = getMockFilePath(mockPath, req);
+  if (!mockFilePath) {
+    return next();
+  }
 
-  getMockFilePath(mockPath, req, function (mockFilePath) {
+  // try {
+  //
+  // } catch (e) {
+  //   console.log(colors.red('something wrong in file: ' + mockFilePath));
+  //   console.log(colors.red(e));
+  // }
 
-    if (!mockFilePath) {
-      return next();
-    }
+  var str = fs.readFileSync(mockFilePath, 'utf8');
+  const data = parseMd(str);
 
-    var str = fs.readFileSync(mockFilePath, 'utf8');
-    var data = parseMd(str);
-
-    // try {
-    //
-    // } catch (e) {
-    //   console.log(colors.red('something wrong in file: ' + mockFilePath));
-    //   console.log(colors.red(e));
-    // }
-
+  setTimeout(() => {
     res.statusCode = status;
     res.setHeader('Content-Type', 'application/json;charset=utf-8');
-
-    var setData = function (dataRes, response) {
-      if (dataRes.data) {
-        response.end(JSON.stringify(dataRes.data));
-      } else {
-        response.end();
-      }
-    };
-
-    setTimeout(setData(data.res, res), data.res.delay);
-  });
+    res.end(JSON.stringify(data.res.data));
+  }, data.res.delay);
 }
