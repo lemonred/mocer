@@ -77,6 +77,21 @@ var app = express();
 app.use(mocer(__dirname + '/mocks'));
 app.listen(3000);
 ```
+**if webpack-dev-server**
+
+```javascript
+var mocer = require('mocer');
+module.exports = {
+  devServer: {
+    before: function(app) {
+      app.get(/^\/(apis|_apis)\/*/, mocer(path.resolve(__dirname, '../mocks'))) //apis为匹配接口路径，_apis匹配接口生成的文档页面路径
+    },
+    contentBase: path.join(__dirname, "../src"),
+    host: '0.0.0.0'
+  }
+}
+```
+
 
 **if connect**
 

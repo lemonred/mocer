@@ -37,7 +37,7 @@ function mock(root, options) {
   createAllJson(root);
 
   return function mock(req, res, next) {
-    var isMockie = req.url.indexOf('_apis') > -1 && req.url.indexOf('all') < 0;
+    var isMockie = req.url.indexOf('_apis') > -1 && req.url.indexOf('all') < 0 && req.url.indexOf('.html') >-1;
 
     if (isMockie) {
       renderTemplate(req, res, next, root);
@@ -220,7 +220,14 @@ function renderApis(req, res, next, mockPath) {
   if (!mockFilePath) {
     return next();
   }
-
+  /*
+  判读是否有callback这个参数，如果有就按照jsonp处理
+  */
+  if (query) { 
+    let reg = new RegExp("(^|&)callback=([^&]*)(&|$)"),
+        matchStr = query.match(reg),
+        callbackName = matchStr && matchStr[2] && unescape(matchStr[2]);
+  }
   // try {
   //
   // } catch (e) {
@@ -231,9 +238,16 @@ function renderApis(req, res, next, mockPath) {
   var str = fs.readFileSync(mockFilePath, 'utf8');
   const data = parseMd(str);
 
+  // 增加jsonp,判断是否为jsonp
   setTimeout(() => {
     res.statusCode = status;
-    res.setHeader('Content-Type', 'application/json;charset=utf-8');
-    res.end(JSON.stringify(data.res.data));
+    let returnData = JSON.stringify(data.res.data),
+    resHeader = 'application/json;charset=utf-8';
+    if (callbackName) {
+      resHeader = 'text/html;;charset=utf-8';
+      returnData = callbackName+'('+returnData+')'
+    }
+    res.setHeader('Content-Type', resHeader);
+    res.end(returnData);
   }, data.res.delay);
 }
