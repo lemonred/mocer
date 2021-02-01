@@ -217,6 +217,7 @@ function renderApis(req, res, next, mockPath) {
   var query = url.parse(req.url).query;
   var status = querystring.parse(query)._status || '200';
   var mockFilePath = getMockFilePath(mockPath, req);
+  let callbackName;
   if (!mockFilePath) {
     return next();
   }
@@ -225,7 +226,7 @@ function renderApis(req, res, next, mockPath) {
   */
   if (query) { 
     let reg = new RegExp("(^|&)callback=([^&]*)(&|$)"),
-        matchStr = query.match(reg),
+        matchStr = query.match(reg);
         callbackName = matchStr && matchStr[2] && unescape(matchStr[2]);
   }
   // try {
